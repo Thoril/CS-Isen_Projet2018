@@ -10,6 +10,38 @@ namespace Isen.Artru.Library
         public Node parent { get; set; }
         public List<Node> children { get; set; }
         public int depth { get; }
+        
+        public void AddChildNode(Node node)
+        {
+            node.parent = this;
+            children.Add(node);
+        }
+
+        public void AddNodes(IEnumerable<Node> nodeList)
+        {
+            foreach (var node in nodeList)
+            {
+                AddChildNode(node);
+            }
+        }
+
+        public void RemoveChildNotde(Guid id)
+        {
+            foreach (var node in children)
+            {
+                if (node.id == id)
+                    children.Remove(node);
+            }
+        }
+
+        public void RemoveChildNode(Node node)
+        {
+            foreach (var n in children)
+            {
+                if (n.Equals(node))
+                    children.Remove(n);
+            }
+        }
 
 
         public bool Equals(Node other)
