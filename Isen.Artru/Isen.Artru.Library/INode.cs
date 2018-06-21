@@ -18,6 +18,10 @@ namespace Isen.Artru.Library
         void RemoveChildNotde(Guid id);
         //Retire un enfant à un Node
         void RemoveChildNode(Node node);
+        //Recherche un node selon son id en traversant l'arbre 
+        Node FindTraversing(Guid id);
+        //Recherche le node passé en parametre dans l'arbre
+        Node FindTraversing(Node node);
 
     }
 }

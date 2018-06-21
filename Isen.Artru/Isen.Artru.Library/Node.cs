@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Isen.Artru.Library
 {
@@ -9,8 +10,16 @@ namespace Isen.Artru.Library
         public Guid id { get; }
         public Node parent { get; set; }
         public List<Node> children { get; set; }
-        public int depth { get; }
-        
+        public int depth => parent?.depth + 1 ?? 0;
+
+        public Node(string value)
+        {
+            this.value = value;
+            id = new Guid();
+            children = new List<Node>();
+            parent = null;
+        }
+
         public void AddChildNode(Node node)
         {
             node.parent = this;
@@ -27,7 +36,7 @@ namespace Isen.Artru.Library
 
         public void RemoveChildNotde(Guid id)
         {
-            foreach (var node in children)
+            foreach (var node in children.ToList())
             {
                 if (node.id == id)
                     children.Remove(node);
@@ -36,11 +45,41 @@ namespace Isen.Artru.Library
 
         public void RemoveChildNode(Node node)
         {
-            foreach (var n in children)
+            foreach (var n in children.ToList())
             {
                 if (n.Equals(node))
                     children.Remove(n);
             }
+        }
+
+        public Node FindTraversing(Guid id)
+        {
+            if (children == null)
+                return null;
+            foreach (var node in children)
+            {
+                if (node.id == id)
+                    return  node;
+                var retour = node.FindTraversing(id);
+                if (retour != null)
+                    return retour;
+            }
+            return null;
+        }
+
+        public Node FindTraversing(Node node)
+        {
+            if (children == null)
+                return null;
+            foreach (var n in children)
+            {
+                if (n.Equals(node))
+                    return  n;
+                var retour = n.FindTraversing(node);
+                if (retour != null)
+                    return retour;
+            }
+            return null;
         }
 
 
