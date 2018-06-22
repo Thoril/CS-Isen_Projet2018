@@ -11,6 +11,17 @@ namespace Isen.Artru.Library
         public Node parent { get; set; }
         public List<Node> children { get; set; }
         public int depth => parent?.depth + 1 ?? 0;
+        
+        public override string ToString()
+        {
+            var toString = "";
+            for (var i = 0; i < depth; i++)
+                toString += "|=";
+            toString += $"{value} {id}";
+            foreach (var node in children)
+                toString += $"{Environment.NewLine}{node}";
+            return toString;
+        }
 
         public Node(string value)
         {
