@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Isen.Artru.Library
 {
@@ -21,6 +22,14 @@ namespace Isen.Artru.Library
             foreach (var node in children)
                 toString += $"{Environment.NewLine}{node}";
             return toString;
+        }
+
+        public Node()
+        {
+            value = default(T);
+            id = new Guid();
+            children = new List<Node<T>>();
+            parent = null;
         }
 
         public Node(T value)
@@ -92,7 +101,43 @@ namespace Isen.Artru.Library
             }
             return null;
         }
+        
+        public JObject SerializeJSon()
+        {    
+            var jObject = new JObject();
+            
+            if (value != null) ;
+                jObject.Add(new JProperty("value", value));
 
+            if (children == null || children.Count == 0) return jObject;
+           
+            var jArray = new JArray();
+            children?.ForEach(node => { jArray.Add(node.SerializeJSon()); });
+            jObject.Add(new JProperty("children", jArray));
+            
+            return jObject;
+        }
+        
+        
+        public void UnserializeJson(JToken jToken)
+        {    
+            if(jToken["value"] != null)
+                value = jToken["value"].ToObject<T>();
+
+            List<JToken>  jTokenChildren;
+            if (jToken["children"] != null)
+            {
+                jTokenChildren = jToken["children"].Children().ToList();
+            }
+            else
+                return;
+            foreach (var child in jTokenChildren)
+            {
+                var node = new Node<T>();
+                node.UnserializeJson(child);
+                AddChildNode(node);
+            }
+        }
 
         public bool Equals(Node<T> other)
         {

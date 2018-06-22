@@ -18,6 +18,12 @@ namespace Isen.Artru.ConsoleApp
             f1.AddChildNode(f11);
             f1.AddChildNode(f12);
             Console.WriteLine(racine.ToString());
+            var jSon = racine.SerializeJSon();
+            Console.WriteLine(jSon);
+            var r =  new Node<string>();
+            r.UnserializeJson(jSon);
+            Console.WriteLine(r);
+            
         }
     }
 } 
