@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Isen.Artru.Library
 {
-    public class Node : INode, IEquatable<Node>
+    public class Node<T> : INode<T>, IEquatable<Node<T>>
     {
-        public string value { get; set; }
+        public T value { get; set; }
         public Guid id { get; }
-        public Node parent { get; set; }
-        public List<Node> children { get; set; }
+        public Node<T> parent { get; set; }
+        public List<Node<T>> children { get; set; }
         public int depth => parent?.depth + 1 ?? 0;
         
         public override string ToString()
@@ -23,21 +23,21 @@ namespace Isen.Artru.Library
             return toString;
         }
 
-        public Node(string value)
+        public Node(T value)
         {
             this.value = value;
             id = new Guid();
-            children = new List<Node>();
+            children = new List<Node<T>>();
             parent = null;
         }
 
-        public void AddChildNode(Node node)
+        public void AddChildNode(Node<T> node)
         {
             node.parent = this;
             children.Add(node);
         }
 
-        public void AddNodes(IEnumerable<Node> nodeList)
+        public void AddNodes(IEnumerable<Node<T>> nodeList)
         {
             foreach (var node in nodeList)
             {
@@ -54,7 +54,7 @@ namespace Isen.Artru.Library
             }
         }
 
-        public void RemoveChildNode(Node node)
+        public void RemoveChildNode(Node<T> node)
         {
             foreach (var n in children.ToList())
             {
@@ -63,7 +63,7 @@ namespace Isen.Artru.Library
             }
         }
 
-        public Node FindTraversing(Guid id)
+        public Node<T> FindTraversing(Guid id)
         {
             if (children == null)
                 return null;
@@ -78,7 +78,7 @@ namespace Isen.Artru.Library
             return null;
         }
 
-        public Node FindTraversing(Node node)
+        public Node<T> FindTraversing(Node<T> node)
         {
             if (children == null)
                 return null;
@@ -94,7 +94,7 @@ namespace Isen.Artru.Library
         }
 
 
-        public bool Equals(Node other)
+        public bool Equals(Node<T> other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -106,7 +106,7 @@ namespace Isen.Artru.Library
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Node) obj);
+            return Equals((Node<T>) obj);
         }
 
         public override int GetHashCode()
